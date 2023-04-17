@@ -53,3 +53,45 @@ const useTokenRefresh = (refreshUrl) => {
 
 export default useTokenRefresh;
 ```
+
+
+```javascript
+import { createContext, useState } from 'react';
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(null);
+  const [refreshToken, setRefreshToken] = useState(null);
+
+  const login = async (username, password) => {
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      setToken(data.token);
+      setRefreshToken(data.refreshToken);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const logout = () => {
+    setToken(null);
+    setRefreshToken(null);
+  };
+
+  const authState = { token, refreshToken, login, logout };
+
+  return <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>;
+};
+
+```
