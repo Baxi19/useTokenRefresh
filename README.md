@@ -54,6 +54,7 @@ const useTokenRefresh = (refreshUrl) => {
 export default useTokenRefresh;
 ```
 
+### AuthContext:
 
 ```javascript
 import { createContext, useState } from 'react';
