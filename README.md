@@ -58,6 +58,7 @@ export default useTokenRefresh;
 
 ```javascript
 import { createContext, useState } from 'react';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 
@@ -67,17 +68,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await axios.post('/api/login', { username, password });
 
       if (!response.ok) {
         throw new Error('Login failed');
       }
 
-      const data = await response.json();
+      const data = response.data;
       setToken(data.token);
       setRefreshToken(data.refreshToken);
     } catch (error) {
